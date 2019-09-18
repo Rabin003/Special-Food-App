@@ -18,13 +18,21 @@ import com.example.specialfoodapp.adapter.RecyclerViewHomeAdapter;
 import com.example.specialfoodapp.adapter.ViewPagerHeaderAdapter;
 import com.example.specialfoodapp.model.Categories;
 import com.example.specialfoodapp.model.Meals;
+import com.example.specialfoodapp.view.category.CategoryActivity;
+import com.example.specialfoodapp.view.detail.DetailActivity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements HomeView {
+
+    public static final String EXTRA_CATEGORY = "category";
+    public static final String EXTRA_POSITION = "position";
+    public static final String EXTRA_DETAIL = "detail";
+
     @BindView(R.id.viewPageHeader)
     ViewPager viewPagerMeal;
     @BindView(R.id.recyclerCategory)
@@ -64,12 +72,13 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         viewPagerMeal.setPadding(20, 0, 150, 0);
         headerAdapter.notifyDataSetChanged();
 
-        headerAdapter.setOnItemClickListener((v, position) -> {
-            Toast.makeText(this,meal.get(position).getStrMeal(),Toast.LENGTH_SHORT).show();
+        headerAdapter.setOnItemClickListener((view, position) -> {
+            TextView mealName = findViewById(R.id.mealName);
+            Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+            intent.putExtra(EXTRA_DETAIL,mealName.getText().toString());
+            startActivity(intent);
+
         });
-
-
-
 
 
     }
@@ -85,10 +94,11 @@ public class HomeActivity extends AppCompatActivity implements HomeView {
         homeAdapter.notifyDataSetChanged();
 
         homeAdapter.setOnItemClickListener((view, position) -> {
-            Toast.makeText(this,category.get(position).getStrCategory(), Toast.LENGTH_SHORT).show();
-
+            Intent intent = new Intent(this, CategoryActivity.class);
+            intent.putExtra(EXTRA_CATEGORY, (Serializable) category);
+            intent.putExtra(EXTRA_POSITION, position);
+            startActivity(intent);
         });
-
     }
 
     @Override
